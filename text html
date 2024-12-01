@@ -17,11 +17,11 @@
         <canvas id="draw-canvas"></canvas>
     </div>
 
-    <!-- Leaflet JS -->
+
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <!-- Script per la mappa -->
+
     <script src="js/map.js"></script>
-    <!-- Script per il visualizzatore 3D -->
+ 
     <script src="js/3dhop.js"></script>
 </body>
 </html>

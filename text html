@@ -17,11 +17,11 @@
         <canvas id="draw-canvas"></canvas>
     </div>
 
-
+    <!-- Leaflet JS -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-
+    <!-- Script per la mappa -->
     <script src="js/map.js"></script>
- 
+    <!-- Script per 3DHop -->
     <script src="js/3dhop.js"></script>
 </body>
 </html>
@@ -65,7 +65,10 @@ document.addEventListener("DOMContentLoaded", function () {
     // Aggiungi i marker
     points.forEach(function (point) {
         var marker = L.marker(point.coords).addTo(map);
-        marker.bindPopup(`<b>${point.name}</b><br><button onclick="load3DObject('${point.model}')">Visualizza Oggetto</button>`);
+        marker.bindPopup(`
+            <b>${point.name}</b><br>
+            <button onclick="load3DObject('${point.model}')">Visualizza Oggetto</button>
+        `);
     });
 });
 var presenter = null;

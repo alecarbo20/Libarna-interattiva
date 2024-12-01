@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mappa Interattiva</title>
+
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <!-- Stile personalizzato -->
+    <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+    <h1>Mappa Interattiva con Oggetti 3D</h1>
+    <div id="map"></div>
+    <div id="viewer">
+        <canvas id="draw-canvas"></canvas>
+    </div>
+
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <!-- Script per la mappa -->
+    <script src="js/map.js"></script>
+    <!-- Script per il visualizzatore 3D -->
+    <script src="js/3dhop.js"></script>
+</body>
+</html>
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+h1 {
+    text-align: center;
+    margin: 20px 0;
+}
+
+#map {
+    height: 400px;
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+#viewer {
+    width: 100%;
+    height: 500px;
+    background: #333;
+}
+document.addEventListener("DOMContentLoaded", function () {
+    // Crea la mappa
+    var map = L.map('map').setView([41.9028, 12.4964], 13); // Coordinate iniziali (Roma)
+
+    // Aggiungi un layer di base (OpenStreetMap)
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19
+    }).addTo(map);
+
+    // Punti cliccabili
+    var points = [
+        { coords: [41.9028, 12.4964], name: 'Oggetto 1', model: 'models/object1.ply' },
+        { coords: [41.8902, 12.4922], name: 'Oggetto 2', model: 'models/object2.ply' }
+    ];
+
+    // Aggiungi i marker
+    points.forEach(function (point) {
+        var marker = L.marker(point.coords).addTo(map);
+        marker.bindPopup(`<b>${point.name}</b><br><button onclick="load3DObject('${point.model}')">Visualizza Oggetto</button>`);
+    });
+});
+var presenter = null;
+
+// Inizializza il viewer 3D
+document.addEventListener("DOMContentLoaded", function () {
+    presenter = new Presenter("draw-canvas");
+});
+
+// Carica il modello 3D
+function load3DObject(modelUrl) {
+    if (presenter) {
+        presenter.setScene({
+            meshes: {
+                "model": { url: modelUrl }
+            },
+            modelInstances: {
+                "instance": { mesh: "model", color: [0.8, 0.7, 0.75] }
+            },
+            trackball: {
+                type: TurntablePanTrackball,
+                trackOptions: {
+                    startPhi: 35.0,
+                    startTheta: 15.0,
+                    startDistance: 2.5,
+                    minMaxPhi: [-180, 180],
+                    minMaxTheta: [-30.0, 70.0],
+                    minMaxDist: [0.5, 3.0]
+                }
+            }
+        });
+    } else {
+        alert("Il viewer 3D non è pronto.");
+    }
+}
